@@ -1,0 +1,35 @@
+{
+  "name": "stack11",
+  "version": "1.0.0",
+  "description": "EstateStack is a modern real estate web application powered by the MERN stack. Designed with scalable architecture, it enables property listings, user authentication, and advanced search features.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon api/index.js",
+    "start": "node index.js",
+    "build" : "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prateek000001/stack11.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prateek000001/stack11/issues"
+  },
+  "homepage": "https://github.com/prateek000001/stack11#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "env": "^0.0.2",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.15.1",
+    "nodemailer": "^7.0.6",
+    "nodemon": "^3.1.10"
+  }
+}
