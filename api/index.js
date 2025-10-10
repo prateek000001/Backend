@@ -7,11 +7,20 @@ import listingRouter from "./routes/listing.route.js";
 import contactRoute from "./routes/contact.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-
+import path from "path";
+import { fileURLToPath } from "url";
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Serve static files
+app.use(express.static(path.join(__dirname, "build")));
+
+// SPA fallback
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 // ✅ MongoDB Connection
 mongoose
