@@ -1,4 +1,8 @@
-import nodemailer from "nodemailer";
+import sgMail from "@sendgrid/mail";
+import dotenv from "dotenv";
+dotenv.config();
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export const sendInterestEmail = async (req, res) => {
   const { landlordEmail, userName, userEmail, listingTitle, message } = req.body;
@@ -8,17 +12,9 @@ export const sendInterestEmail = async (req, res) => {
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
-      },
-    });
-
-    const mailOptions = {
-      from: `"EstateStack" <${process.env.MAIL_USER}>`,
+    const msg = {
       to: landlordEmail,
+      from: process.env.SENDGRID_SENDER,
       subject: `Interest in your property: ${listingTitle}`,
       text: `
 Hello,
@@ -28,16 +24,13 @@ ${userName} (${userEmail}) is interested in your property: "${listingTitle}".
 Message from user:
 ${message || "No additional message provided."}
 
-Please get in touch with the user for further discussion.
-
 Regards,
 EstateStack Team
       `,
     };
 
-    // Send email
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Email sent:", info.response);
+    await sgMail.send(msg);
+    console.log("Email sent to:", landlordEmail);
 
     return res.status(200).json({ success: true, message: "Email sent successfully!" });
   } catch (error) {
