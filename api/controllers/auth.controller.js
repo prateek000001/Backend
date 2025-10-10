@@ -3,8 +3,7 @@ import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import nodemailer from "nodemailer";
-import { transporter } from "../utils/mail.js";
+import { sendEmail } from "../utils/mail.js"; // updated import for SendGrid
 
 // ----------------- Verify Token Middleware -----------------
 export const verifyToken = (req, res, next) => {
@@ -22,8 +21,6 @@ export const verifyToken = (req, res, next) => {
 export const signup = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
-    console.log("SignUp Request Body:", req.body);
-
     const hashedPassword = bcryptjs.hashSync(password, 10);
     const newUser = new User({ username, email, password: hashedPassword });
     await newUser.save();
@@ -51,9 +48,9 @@ export const signin = async (req, res, next) => {
     res
       .cookie("access_token", token, {
         httpOnly: true,
-        secure: true,       // required for HTTPS
-        sameSite: "none",   // required for cross-domain cookies
-        maxAge: 24 * 60 * 60 * 1000, // 1 day
+        secure: true,
+        sameSite: "none",
+        maxAge: 24 * 60 * 60 * 1000,
       })
       .status(200)
       .json(rest);
@@ -117,18 +114,14 @@ export const signOut = async (req, res, next) => {
 export const forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
-    console.log("Forgot Password Request Body:", req.body);
-
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "User not found" });
 
-    // Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     user.resetPasswordToken = otp;
-    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000;
     await user.save();
 
-    // Send OTP via SendGrid
     await sendEmail({
       to: email,
       subject: "Your OTP for Password Reset",
