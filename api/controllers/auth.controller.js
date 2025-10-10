@@ -118,19 +118,21 @@ export const forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
     console.log("Forgot Password Request Body:", req.body);
+
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "User not found" });
 
+    // Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     user.resetPasswordToken = otp;
-    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000;
+    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
     await user.save();
 
-    await transporter.sendMail({
-      from: `"EstateStack" <${process.env.MAIL_USER}>`,
+    // Send OTP via SendGrid
+    await sendEmail({
       to: email,
       subject: "Your OTP for Password Reset",
-      text: `Hello ${user.username},\n\nYour OTP is: ${otp}\nIt will expire in 10 minutes.`,
+      text: `Hello ${user.username},\n\nYour OTP is: ${otp}\nIt will expire in 10 minutes.\n\nRegards,\nEstateStack Team`,
     });
 
     res.json({ message: "OTP generated. Check your email for OTP." });
