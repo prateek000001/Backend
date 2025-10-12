@@ -10,33 +10,31 @@ export const test = (req, res) => {
 };
 
 export const updateUser = async (req, res, next) => {
+   console.log("JWT user id:", req.user.id);
+console.log("Param id:", req.params.id);
+  if (req.user.id !== req.params.id)
+    return next(errorHandler(401, 'You can only update your own account!'));
   try {
-    const userId = req.user.id; // ✅ Always use JWT ID
-    console.log("JWT user id:", userId);
-
-    // Hash password if provided
     if (req.body.password) {
       req.body.password = bcryptjs.hashSync(req.body.password, 10);
     }
 
-    // Only update fields that exist in req.body
-    const updateData = {};
-    if (req.body.username) updateData.username = req.body.username;
-    if (req.body.email) updateData.email = req.body.email;
-    if (req.body.password) updateData.password = req.body.password;
-    if (req.body.avatar) updateData.avatar = req.body.avatar;
-
     const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { $set: updateData },
+      req.params.id,
+      {
+        $set: {
+          username: req.body.username,
+          email: req.body.email,
+          password: req.body.password,
+          avatar: req.body.avatar,
+        },
+      },
       { new: true }
     );
 
-    if (!updatedUser) return next(errorHandler(404, "User not found"));
-
     const { password, ...rest } = updatedUser._doc;
 
-    res.status(200).json({ success: true, ...rest });
+    res.status(200).json(rest);
   } catch (error) {
     next(error);
   }
