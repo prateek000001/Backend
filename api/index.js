@@ -7,7 +7,7 @@ import listingRouter from "./routes/listing.route.js";
 import contactRoute from "./routes/contact.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-
+import jwt from "jsonwebtoken";
 dotenv.config();
 
 const app = express();
