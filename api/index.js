@@ -32,11 +32,21 @@ app.use(express.json());
 app.use(cookieParser());
 app.set("trust proxy", 1)
 // testing 
-app.use((req, res, next) => {
-  console.log("🧩 Incoming cookies:", req.cookies);
-  console.log("🧩 Request origin:", req.headers.origin);
-  next();
+// app.use((req, res, next) => {
+//   console.log("🧩 Incoming cookies:", req.cookies);
+//   console.log("🧩 Request origin:", req.headers.origin);
+//   next();
+// });
+app.get("/debug-token", (req, res) => {
+  const token = req.cookies.access_token;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    res.json({ valid: true, decoded });
+  } catch (err) {
+    res.json({ valid: false, error: err.message });
+  }
 });
+
 
 // ✅ API Routes
 app.use("/api/user", userRouter);
