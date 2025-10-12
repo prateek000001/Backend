@@ -57,16 +57,17 @@ console.log("Param id:", req.params.id);
 export const getUserListings = async (req, res, next) => {
   console.log("JWT user id:", req.user.id);
 console.log("Param id:", req.params.id);
-  if (req.user.id === req.params.id) {
+  // if (req.user.id === req.params.id) {
     try {
       const listings = await Listing.find({ userRef: req.params.id });
       res.status(200).json(listings);
     } catch (error) {
       next(error);
     }
-  } else {
+  // }
+  //  else {
     return next(errorHandler(401, 'You can only view your own listings!'));
-  }
+  // }
 };
 
 export const getUser = async (req, res, next) => {
