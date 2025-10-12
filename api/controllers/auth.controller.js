@@ -50,6 +50,7 @@ export const signin = async (req, res, next) => {
         httpOnly: true,
         secure: true,
         sameSite: "none",
+        path:'/',
         maxAge: 24 * 60 * 60 * 1000,
       })
       .status(200)

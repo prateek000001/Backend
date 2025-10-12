@@ -30,6 +30,7 @@ app.use(
 // ✅ Middlewares
 app.use(express.json());
 app.use(cookieParser());
+app.set("trust proxy", 1)
 
 // ✅ API Routes
 app.use("/api/user", userRouter);
