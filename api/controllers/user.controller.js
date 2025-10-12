@@ -10,6 +10,8 @@ export const test = (req, res) => {
 };
 
 export const updateUser = async (req, res, next) => {
+   console.log("JWT user id:", req.user.id);
+console.log("Param id:", req.params.id);
   if (req.user.id !== req.params.id)
     return next(errorHandler(401, 'You can only update your own account!'));
   try {
@@ -39,6 +41,8 @@ export const updateUser = async (req, res, next) => {
 };
 
 export const deleteUser = async (req, res, next) => {
+   console.log("JWT user id:", req.user.id);
+console.log("Param id:", req.params.id);
   if (req.user.id !== req.params.id)
     return next(errorHandler(401, 'You can only delete your own account!'));
   try {
