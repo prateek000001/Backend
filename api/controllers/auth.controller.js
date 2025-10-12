@@ -52,6 +52,7 @@ export const signin = async (req, res, next) => {
         sameSite: "none",
         path:'/',
         maxAge: 24 * 60 * 60 * 1000,
+        domain: "backend-grre.onrender.com",
       })
       .status(200)
       .json(rest);
@@ -93,6 +94,7 @@ export const google = async (req, res, next) => {
         secure: true,
         sameSite: "none",
         maxAge: 24 * 60 * 60 * 1000,
+        domain: "backend-grre.onrender.com",
       })
       .status(200)
       .json(rest);
