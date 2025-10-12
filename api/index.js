@@ -27,10 +27,10 @@ app.use(
   })
 );
 
+app.set("trust proxy", 1);
 // ✅ Middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.set("trust proxy", 1)
 // testing 
 // app.use((req, res, next) => {
 //   console.log("🧩 Incoming cookies:", req.cookies);
