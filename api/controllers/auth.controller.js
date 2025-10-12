@@ -8,6 +8,7 @@ import { sendEmail } from "../utils/mail.js"; // updated import for SendGrid
 // ----------------- Verify Token Middleware -----------------
 export const verifyToken = (req, res, next) => {
   const token = req.cookies.access_token;
+  console.log("Access Token:",token);
   if (!token) return res.status(401).json({ message: "Not authenticated!" });
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
